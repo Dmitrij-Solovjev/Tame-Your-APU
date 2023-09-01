@@ -20,7 +20,7 @@ E: POWER_SUPPLY_NAME=ACAD
 E: POWER_SUPPLY_TYPE=Mains
 E: POWER_SUPPLY_ONLINE=0
 ```
-Make file ```80.power.rules``` in ```/etc/udev/rules.d/``` or copy with ```sudo cp YOUR_FILE_DIR/80.power.rules /etc/udev/rules.d/80.power.rules:
+Make file ```80.power.rules``` in ```/etc/udev/rules.d/``` or copy with ```sudo cp YOUR_FILE_DIR/80.power.rules /etc/udev/rules.d/80.power.rules```:
 ```
 SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", RUN+="/bin/sh PRESET_DIR/CPU_perfomance.sh"
 SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="0", RUN+="/bin/sh PRESET_DIR/CPU_powersave.sh"
