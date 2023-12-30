@@ -47,3 +47,4 @@ ryzenadj --tctl-temp=60 --slow-limit=8000 --fast-limit=12000 --gfx-clk=200
 
 # Links
   * https://unix.stackexchange.com/questions/227918/system-event-on-ac-adapter-insert-or-battery-unplugged
+  * https://www.baeldung.com/linux/run-command-start-up
