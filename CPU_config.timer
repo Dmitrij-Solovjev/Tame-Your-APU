@@ -1,0 +1,18 @@
+#!/sbin/openrc-run
+# Copyright 2021 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+name="CPU_config"
+description="Applying power settings at system startup"
+command="/home/dima/.config/autostart/CPU_config.sh"
+#command_args="${service_args}"
+#command_user="root:wheel"
+
+depend() {
+   after net
+}
+#start(){
+#	ebegin "Activating power profile"
+#	/home/dima/.config/autostart/CPU_config.sh
+#	eend 0
+#}
