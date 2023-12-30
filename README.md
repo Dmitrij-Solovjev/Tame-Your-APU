@@ -40,10 +40,10 @@ else
    ryzenadj --tctl-temp=60 --slow-limit=8000 --fast-limit=12000 --gfx-clk=200
 fi
 ```
-# If you want auto-apply on startup with systemd:
+## If you want auto-apply on startup with systemd:
  Use ```CPU_config.service```
 
-# If you want auto-apply on startup with openrc:
+## If you want auto-apply on startup with openrc:
  Use ```CPU_config.timer```. Put file in dir ```/etc/init.d/``` and run ```rc-update add CPU_config```. power-profile-daemon must be installed in your system.
 
 # Warning
