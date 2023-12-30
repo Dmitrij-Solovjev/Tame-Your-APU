@@ -42,9 +42,29 @@ Make file ```CPU_powersave.sh``` in ```PRESET_DIR```:
 
 ryzenadj --tctl-temp=60 --slow-limit=8000 --fast-limit=12000 --gfx-clk=200
 ```
+# If you want auto-apply on startup
+Create a new file in the ```/etc/systemd/system/rc-local.service``` and put the following contents in the file:
+```
+[Unit]
+Description=/etc/rc.local Compatibility
+ConditionPathExists=/etc/rc.local
+
+[Service]
+Type=forking
+ExecStart=/etc/rc.local start
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+SysVStartPriority=99
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
 # Warning
 ## Be careful and read the RyzenAdj documentation first. I am not responsible for your damage, do so at your own risk.
 
 # Links
   * https://unix.stackexchange.com/questions/227918/system-event-on-ac-adapter-insert-or-battery-unplugged
-  * https://www.baeldung.com/linux/run-command-start-up
+  * https://github.com/OpenRC/openrc/blob/master/service-script-guide.md
