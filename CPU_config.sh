@@ -1,7 +1,12 @@
 #!/bin/bash
 
 if [[ `cat /sys/class/power_supply/ACAD/online` == 1 ]]; then
-  /home/dima/.config/autostart/CPU_perfomance.sh
+   notify-send "Включён производительный режим"
+   #powerprofilesctl set performance
+   powerprofilesctl set balanced
+   ryzenadj --tctl-temp=80 --fast-limit=65000 --slow-limit=55000 --gfx-clk=200
 else
-  /home/dima/.config/autostart/CPU_powersave.sh
+   notify-send "Включён энергоэффективный режим"
+   powerprofilesctl set power-saver
+   ryzenadj --tctl-temp=60 --slow-limit=8000 --fast-limit=12000 --gfx-clk=200
 fi
