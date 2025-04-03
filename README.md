@@ -20,28 +20,70 @@ E: POWER_SUPPLY_NAME=ACAD
 E: POWER_SUPPLY_TYPE=Mains
 E: POWER_SUPPLY_ONLINE=0
 ```
-Make file ```80.power.rules``` in ```/etc/udev/rules.d/``` or copy with ```sudo cp YOUR_FILE_DIR/80.power.rules /etc/udev/rules.d/80.power.rules```:
+Create file ```80.power.rules``` in ```/etc/udev/rules.d/```:
+```sudo nano /etc/udev/rules.d/80.power.rules```:
 ```
-SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", RUN+="/bin/sh PRESET_DIR/CPU_config.sh"
-SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="0", RUN+="/bin/sh PRESET_DIR/CPU_config.sh"
+SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", RUN+="/usr/bin/systemctl start power_mode.service"
+SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="0", RUN+="/usr/bin/systemctl start power_mode.service"
 ```
+
+Create file ```50-power-profiles.rules``` in ```/etc/polkit-1/rules.d/```:
+```sudo nano/etc/polkit-1/rules.d/50-power-profiles.rules```:
+```
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.UPower.PowerProfiles.switch-profile" &&
+        subject.isInGroup("power")) {
+        return polkit.Result.YES;
+    }
+});
+```
+Create new group and add user to it:
+```
+sudo groupadd power
+sudo usermod -aG power $USER
+```
+
+
 Make file ```CPU_config.sh``` in ```PRESET_DIR```:
 ```
 #!/bin/bash
+#CPU_config.sh
 
 if [[ `cat /sys/class/power_supply/ACAD/online` == 1 ]]; then
-   notify-send "Включён производительный режим"
+   notify-send "Изменение подключения" "Включён производительный режим"
    #powerprofilesctl set performance
    powerprofilesctl set balanced
-   ryzenadj --tctl-temp=80 --fast-limit=65000 --slow-limit=55000 --gfx-clk=200
+   #ryzenadj --tctl-temp=80 --fast-limit=65000 --slow-limit=55000 --gfx-clk=200
 else
-   notify-send "Включён энергоэффективный режим"
+   notify-send "Изменение подключения" "Включён энергоэффективный режим"
    powerprofilesctl set power-saver
-   ryzenadj --tctl-temp=60 --slow-limit=8000 --fast-limit=12000 --gfx-clk=200
+   #ryzenadj --tctl-temp=60 --slow-limit=8000 --fast-limit=12000 --gfx-clk=200
 fi
+
+/usr/bin/python3 ./change_screen_refresh_rate.py
+
 ```
 ## If you want auto-apply on startup with systemd:
- Use ```CPU_config.service```
+```sudo nano /etc/systemd/system/power_mode.service```
+```
+[Unit]
+Description=Скрипт настройки производительности при изменении состояния питания
+
+[Service]
+Type=oneshot
+ExecStart=/home/dima/.config/autostart/CPU_config.sh
+Environment=DISPLAY=:0
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+WorkingDirectory=/home/dima/.config/autostart
+User=YOUR_USER
+Group=YOUR_USER
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
 
 ## If you want auto-apply on startup with openrc:
  Use ```CPU_config.timer```. Put file in dir ```/etc/init.d/``` and run ```rc-update add CPU_config```. power-profile-daemon must be installed in your system.
