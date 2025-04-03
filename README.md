@@ -23,8 +23,8 @@ E: POWER_SUPPLY_ONLINE=0
 Create file ```80.power.rules``` in ```/etc/udev/rules.d/```:
 ```sudo nano /etc/udev/rules.d/80.power.rules```:
 ```
-SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", RUN+="/usr/bin/systemctl start power_mode.service"
-SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="0", RUN+="/usr/bin/systemctl start power_mode.service"
+SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}="power_mode.service"
+SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_STATUS}=="Discharging", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}="power_mode.service"
 ```
 
 Create file ```50-power-profiles.rules``` in ```/etc/polkit-1/rules.d/```:
