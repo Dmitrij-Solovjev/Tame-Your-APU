@@ -1,0 +1,15 @@
+[Unit]
+Description=Скрипт настройки производительности при изменении состояния питания
+
+[Service]
+Type=oneshot
+ExecStart=/home/dima/.config/autostart/CPU_config.sh
+Environment=DISPLAY=:0
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+WorkingDirectory=/home/dima/.config/autostart
+User=dima
+Group=dima
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target
