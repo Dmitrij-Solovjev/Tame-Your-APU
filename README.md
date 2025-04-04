@@ -26,7 +26,10 @@ Create file ```80.power.rules``` in ```/etc/udev/rules.d/```:
 SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}="power_mode.service"
 SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_STATUS}=="Discharging", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}="power_mode.service"
 ```
-
+After reload udev rules:
+```
+sudo udevadm control --reload-rules
+```
 Create file ```50-power-profiles.rules``` in ```/etc/polkit-1/rules.d/```:
 ```sudo nano/etc/polkit-1/rules.d/50-power-profiles.rules```:
 ```
